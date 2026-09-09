@@ -1,6 +1,13 @@
 import json
+import logging
 from web3 import Web3
 from config import RPC_URL, CONTRACT_ADDRESS, PRIVATE_KEY, ABI_PATH
+
+# Cache ABI at module load to avoid repeated file I/O
+with open(ABI_PATH) as f:
+    _CACHED_ABI = json.load(f)
+
+logger = logging.getLogger(__name__)
 
 def get_web3():
     return Web3(Web3.HTTPProvider(RPC_URL))
@@ -8,21 +15,24 @@ def get_web3():
 def get_contract(w3=None):
     if w3 is None:
         w3 = get_web3()
-    with open(ABI_PATH) as f:
-        abi = json.load(f)
     if not CONTRACT_ADDRESS:
         raise ValueError("CONTRACT_ADDRESS is not set in configuration")
     contract = w3.eth.contract(
         address=Web3.to_checksum_address(CONTRACT_ADDRESS),
-        abi=abi
+        abi=_CACHED_ABI
     )
     return contract
 
 def is_connected():
+    """Check if connected to RPC node. Logs specific errors for debugging."""
     try:
         w3 = get_web3()
         return w3.is_connected()
-    except Exception:
+    except ConnectionError as e:
+        logger.warning(f"RPC connection failed: {e}")
+        return False
+    except Exception as e:
+        logger.error(f"Unexpected error checking RPC connection: {e}")
         return False
 
 def _build_and_send_tx(w3, tx_fn):
@@ -34,9 +44,24 @@ def _build_and_send_tx(w3, tx_fn):
     sender_address = account.address
     nonce = w3.eth.get_transaction_count(sender_address, 'pending')
     
+    # Build transaction with gas estimation and EIP-1559 fees
+    try:
+        gas_estimate = tx_fn.estimate_gas({'from': sender_address})
+        gas_limit = int(gas_estimate * 1.2)  # 20% buffer
+    except Exception:
+        gas_limit = 300000  # Fallback default
+    
+    # EIP-1559 fee structure (works on modern networks, falls back on legacy)
+    base_fee = w3.eth.get_block('latest').get('baseFeePerGas', w3.to_wei('20', 'gwei'))
+    max_priority_fee = w3.to_wei('2', 'gwei')
+    max_fee = base_fee * 2 + max_priority_fee
+    
     tx_dict = tx_fn.build_transaction({
         'from': sender_address,
         'nonce': nonce,
+        'gas': gas_limit,
+        'maxFeePerGas': max_fee,
+        'maxPriorityFeePerGas': max_priority_fee,
     })
     
     signed_tx = w3.eth.account.sign_transaction(tx_dict, private_key=PRIVATE_KEY)
@@ -66,8 +91,8 @@ def mint_asset_on_chain(owner_address: str, asset_type: str, asset_name: str, qu
         events = contract.events.AssetMinted().process_receipt(receipt)
         if events:
             asset_id = events[0]['args']['id']
-    except Exception:
-        pass
+    except Exception as e:
+        logger.warning(f"Failed to parse AssetMinted event from receipt: {e}")
 
     return {
         "status": "confirmed" if receipt.status == 1 else "reverted",
@@ -160,4 +185,4 @@ def check_admin_status(wallet_address: str):
         "is_admin": is_admin or (checksum.lower() == super_admin.lower()),
         "is_super_admin": (checksum.lower() == super_admin.lower()),
         "super_admin": super_admin
-    }
+    }

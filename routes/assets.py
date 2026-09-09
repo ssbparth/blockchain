@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException, Path
+import logging
 from models.schemas import AssetMint, AssetRevoke
 from services.blockchain import (
     is_connected,
@@ -10,6 +11,8 @@ from services.blockchain import (
 from services.ipfs import upload_to_ipfs
 
 router = APIRouter()
+
+logger = logging.getLogger(__name__)
 
 @router.post("/mint")
 def mint_asset(data: AssetMint):
@@ -30,7 +33,8 @@ def mint_asset(data: AssetMint):
         try:
             metadata_uri = upload_to_ipfs(f"asset_{data.asset_name}.json", metadata_payload)
         except Exception as e:
-            raise HTTPException(status_code=502, detail=f"IPFS pinning error: {str(e)}")
+            logger.error(f"IPFS pinning failed for asset {data.asset_name}: {e}")
+            raise HTTPException(status_code=502, detail="IPFS pinning failed")
 
     # 2. Call smart contract mintAsset
     try:
@@ -49,7 +53,8 @@ def mint_asset(data: AssetMint):
             "status": tx_result.get("status")
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Transaction failed: {str(e)}")
+        logger.error(f"Transaction failed for asset {data.asset_name}: {e}")
+        raise HTTPException(status_code=400, detail="Transaction failed")
 
 @router.get("/get/{wallet_address}")
 def get_assets(wallet_address: str):
@@ -63,7 +68,8 @@ def get_assets(wallet_address: str):
             "assets": assets
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to fetch assets: {str(e)}")
+        logger.error(f"Failed to fetch assets for {wallet_address}: {e}")
+        raise HTTPException(status_code=400, detail="Failed to fetch assets")
 
 @router.get("/{asset_id}")
 def get_asset(asset_id: int = Path(..., ge=1)):
@@ -77,7 +83,8 @@ def get_asset(asset_id: int = Path(..., ge=1)):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Failed to fetch asset: {str(e)}")
+        logger.error(f"Failed to fetch asset {asset_id}: {e}")
+        raise HTTPException(status_code=400, detail="Failed to fetch asset")
 
 @router.post("/revoke")
 def revoke_asset(data: AssetRevoke):
@@ -91,4 +98,5 @@ def revoke_asset(data: AssetRevoke):
             "status": tx_result.get("status")
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail=f"Revocation failed: {str(e)}")
+        logger.error(f"Revocation failed for asset {data.asset_id}: {e}")
+        raise HTTPException(status_code=400, detail="Revocation failed")

@@ -1,10 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from web3 import Web3
+import logging
 from models.schemas import IdentityCreate
 from services.blockchain import get_web3, is_connected
 from services.ipfs import upload_to_ipfs
 
 router = APIRouter()
+
+logger = logging.getLogger(__name__)
 
 @router.get("/status")
 def blockchain_status():
@@ -32,6 +35,7 @@ def create_identity(data: IdentityCreate):
     
     # Optionally pin user profile metadata to IPFS
     ipfs_profile_uri = None
+    ipfs_error = None
     try:
         profile_data = {
             "name": data.name,
@@ -39,16 +43,18 @@ def create_identity(data: IdentityCreate):
             "wallet": checksum_wallet
         }
         ipfs_profile_uri = upload_to_ipfs(f"identity_{checksum_wallet}.json", profile_data)
-    except Exception:
-        # Gracefully handle if IPFS pinning fails or is optional
-        pass
+    except Exception as e:
+        # Log the error but don't fail the request - IPFS is optional for identity
+        logger.warning(f"IPFS upload failed for identity {checksum_wallet}: {e}")
+        ipfs_error = str(e)
 
     return {
         "message": "Identity registered",
         "wallet": checksum_wallet,
         "name": data.name,
         "email": data.email,
-        "profile_ipfs": ipfs_profile_uri
+        "profile_ipfs": ipfs_profile_uri,
+        "profile_ipfs_error": ipfs_error
     }
 
 @router.get("/balance/{wallet_address}")
@@ -68,4 +74,4 @@ def get_balance(wallet_address: str):
         "wallet": checksum,
         "balance_wei": str(balance_wei),
         "balance_eth": float(balance_eth)
-    }
+    }
