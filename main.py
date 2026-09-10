@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import os
-from routes import identity, assets, roles
+from routes import identity, assets, roles, recovery, audit, ai
 
 app = FastAPI(
     title="Blockchain Digital Asset & Identity Platform",
@@ -25,7 +25,13 @@ app.add_middleware(
 app.include_router(identity.router, prefix="/identity", tags=["Identity"])
 app.include_router(assets.router, prefix="/assets", tags=["Assets"])
 app.include_router(roles.router, prefix="/roles", tags=["Roles"])
+app.include_router(recovery.router, prefix="/recovery", tags=["Recovery"])
+app.include_router(audit.router, prefix="/audit", tags=["Audit Logging"])
+app.include_router(ai.router, prefix="/ai", tags=["AI Agent"])
 
 @app.get("/health")
 def health_check():
     return {"status": "ok", "message": "Blockchain backend is running"}
+
+
+

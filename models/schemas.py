@@ -52,3 +52,38 @@ class AssetResponse(BaseModel):
     metadata_uri: str
     owner: str
     is_valid: bool
+# --- RECOVERY SCHEMAS ---
+
+class GuardianAdd(BaseModel):
+    guardian_address: str = Field(..., description="Wallet address of the trusted guardian")
+
+class GuardianRemove(BaseModel):
+    guardian_address: str = Field(..., description="Wallet address of the guardian to remove")
+
+class RecoveryRequestPayload(BaseModel):
+    identity_address: str = Field(..., description="The original identity wallet address being recovered")
+    new_owner_address: str = Field(..., description="The new wallet address to take control")
+
+class RecoveryApprovePayload(BaseModel):
+    recovery_id: int = Field(..., description="ID of the recovery request")
+
+class RecoveryExecutePayload(BaseModel):
+    recovery_id: int = Field(..., description="ID of the recovery request")
+
+class RecoveryCancelPayload(BaseModel):
+    recovery_id: int = Field(..., description="ID of the recovery request")
+
+# --- AUDIT LOGGING ---
+
+class AuditLogPayload(BaseModel):
+    action: str = Field(..., description="Action category e.g. 'USER_LOGIN', 'DOCUMENT_VERIFIED'")
+    details: str = Field(..., description="Verbose details of the action")
+
+# --- AI CHAT SCHEMAS ---
+
+class ChatMessage(BaseModel):
+    role: str = Field(..., description="user, assistant, or system")
+    content: str
+
+class ChatRequest(BaseModel):
+    messages: List[ChatMessage]

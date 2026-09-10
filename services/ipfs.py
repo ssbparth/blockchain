@@ -38,3 +38,7 @@ def upload_to_ipfs(file_name: str, file_content: dict):
     else:
         logger.error(f"IPFS upload failed for {file_name}: {response.status_code} - {response.text}")
         raise Exception(f"IPFS upload failed: {response.status_code} - {response.text}")
+
+        
+def pin_json_to_ipfs(file_name: str, file_content: dict):
+    return upload_to_ipfs(file_name, file_content)        
