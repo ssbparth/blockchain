@@ -13,3 +13,24 @@ def log_audit(data: AuditLogPayload):
         return {"message": "Audit log recorded on-chain", **result}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.get("/logs")
+def get_audit_logs():
+    if not is_connected():
+        raise HTTPException(status_code=503, detail="Blockchain node not connected")
+    try:
+        from services.blockchain import get_web3, get_contract
+        w3 = get_web3()
+        contract = get_contract(w3)
+        events = contract.events.AuditLog().get_logs(fromBlock=0)
+        logs = []
+        for e in events:
+            logs.append({
+                "action": e['args']['action'],
+                "details": e['args']['details'],
+                "actor": e['args']['actor'],
+                "timestamp": e['args']['timestamp']
+            })
+        return {"logs": logs}
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
