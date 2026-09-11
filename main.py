@@ -11,7 +11,7 @@ app = FastAPI(
 
 # CORS configuration - restrict origins in production
 # Set ALLOWED_ORIGINS env var as comma-separated list (e.g., "https://app.example.com,http://localhost:3000")
-allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000").split(",")
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:3000,http://localhost:5173,http://127.0.0.1:5173").split(",")
 
 # Enable CORS for frontend clients
 app.add_middleware(
@@ -32,6 +32,7 @@ app.include_router(ai.router, prefix="/ai", tags=["AI Agent"])
 @app.get("/health")
 def health_check():
     return {"status": "ok", "message": "Blockchain backend is running"}
+
 
 
 
