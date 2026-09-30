@@ -3,8 +3,14 @@ import logging
 from web3 import Web3
 from config import RPC_URL, CONTRACT_ADDRESS, PRIVATE_KEY, ABI_PATH
 
-with open(ABI_PATH) as f:
-    _CACHED_ABI = json.load(f)
+with open(ABI_PATH, encoding="utf-8") as f:
+    abi_data = json.load(f)
+
+# Support both a raw ABI array and a Hardhat artifact
+if isinstance(abi_data, dict) and "abi" in abi_data:
+    _CACHED_ABI = abi_data["abi"]
+else:
+    _CACHED_ABI = abi_data
 
 logger = logging.getLogger(__name__)
 

@@ -13,4 +13,4 @@ PINATA_JWT = os.getenv("PINATA_JWT", "")
 
 # AI Configuration
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://127.0.0.1:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3:4b")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen3:1.7b")
