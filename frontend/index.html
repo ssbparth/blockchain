@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>VeriChain — Blockchain Identity Platform</title>
+<meta name="description" content="Decentralized identity and digital asset platform. Built for SIH 2026."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#000000;--s1:#000000;--s2:rgba(28,28,30,0.5);--s3:rgba(44,44,46,0.5);
+  --border:rgba(255,255,255,0.1);--border2:rgba(255,255,255,0.2);
+  --accent:#ffffff;--a2:#f5f5f7;--a3:#e5e5ea;--a4:#34c759;
+  --red:#ff3b30;--yellow:#ffcc00;
+  --text:#ffffff;--t2:#a1a1a6;--t3:#8e8e93;
+  --glow:rgba(255,255,255,0.1);
+}
+html{scroll-behavior:smooth;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:rgba(79,142,247,0.4);border-radius:3px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;background:rgba(0,0,0,0.6);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;font-size:1.2rem;font-weight:600;letter-spacing:-.5px;text-decoration:none;color:var(--text)}
+.logo-icon{width:32px;height:32px;border-radius:9px;background:#fff;color:#000;display:flex;align-items:center;justify-content:center;font-size:1rem;box-shadow:0 0 15px var(--glow)}
+.nav-links{display:flex;align-items:center;gap:4px}
+.nav-link{padding:6px 14px;border-radius:18px;font-size:.85rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .3s;border:none;background:none;text-decoration:none}
+.nav-link:hover{color:var(--text);background:rgba(255,255,255,.1)}
+.nav-cta{background:#fff!important;color:#000!important;padding:8px 20px!important;border-radius:20px!important;font-weight:600}
+.nav-cta:hover{opacity:.8;transform:scale(1.02)}
+.nav-pill{display:flex;align-items:center;gap:5px;font-size:.72rem;padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);color:var(--text);margin-right:8px}
+.nav-pill-dot{width:5px;height:5px;border-radius:50%;background:var(--text);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* SECTIONS — snap */
+section{min-height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+
+/* HERO */
+#hero{flex-direction:column;padding-top:60px}
+canvas#particles{position:absolute;inset:0;z-index:0;opacity:0.6}
+.hero-content{position:relative;z-index:2;text-align:center;max-width:820px;padding:2rem}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:999px;padding:6px 16px;font-size:.8rem;font-weight:500;color:var(--text);margin-bottom:2rem;backdrop-filter:blur(10px)}
+.hero-title{font-size:clamp(3rem,8vw,5.5rem);font-weight:600;line-height:1.05;letter-spacing:-0.03em;margin-bottom:1.5rem}
+.hero-title .line1{color:#fff;}
+.hero-title .line2{color:var(--t2);}
+.hero-sub{font-size:1.25rem;color:var(--t2);line-height:1.6;max-width:620px;margin:0 auto 2.5rem;font-weight:400;letter-spacing:0.01em}
+.hero-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn-hero{padding:.9rem 2.2rem;border-radius:24px;font-size:1.05rem;font-weight:500;cursor:pointer;border:none;transition:all .3s;display:flex;align-items:center;gap:8px}
+.btn-hero-primary{background:#fff;color:#000;box-shadow:0 8px 30px rgba(255,255,255,0.15)}
+.btn-hero-primary:hover{transform:scale(1.03);box-shadow:0 12px 40px rgba(255,255,255,0.25)}
+.btn-hero-ghost{background:rgba(255,255,255,.05);color:var(--text);backdrop-filter:blur(10px)}
+.btn-hero-ghost:hover{background:rgba(255,255,255,.1);transform:scale(1.03)}
+.hero-badges{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:2.5rem}
+
+/* SCROLL INDICATOR */
+.scroll-ind{position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--t3);font-size:.72rem;z-index:2;animation:bob 2.5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+.scroll-arrow{width:20px;height:20px;border-right:2px solid var(--t3);border-bottom:2px solid var(--t3);transform:rotate(45deg)}
+
+/* FEATURES SECTION */
+#features{background:var(--bg);padding:6rem 2rem;align-items:flex-start}
+.section-inner{width:100%;max-width:1100px;margin:0 auto;text-align:center}
+.section-label{font-size:.85rem;font-weight:600;letter-spacing:.1em;color:var(--t2);text-transform:uppercase;margin-bottom:1rem}
+.section-title{font-size:clamp(2.5rem,5vw,3.5rem);font-weight:600;line-height:1.1;letter-spacing:-0.03em;margin-bottom:1.2rem}
+.section-sub{color:var(--t2);font-size:1.1rem;line-height:1.6;max-width:600px;margin:0 auto 4rem}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem;text-align:left}
+.feature-card{background:var(--s2);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border:1px solid var(--border);border-radius:24px;padding:2.5rem;transition:all .4s cubic-bezier(0.16,1,0.3,1);position:relative;overflow:hidden;cursor:default}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.2),transparent);opacity:0.5}
+.feature-card:hover{transform:scale(1.02);box-shadow:0 20px 40px rgba(0,0,0,.5);background:rgba(38,38,40,0.6)}
+.fc-icon{font-size:2.2rem;margin-bottom:1.2rem;opacity:0.9}
+.fc-title{font-size:1.3rem;font-weight:600;margin-bottom:.8rem;letter-spacing:-0.01em}
+.fc-desc{font-size:.95rem;color:var(--t2);line-height:1.6;font-weight:400}
+.fc-tag{display:inline-flex;margin-top:1.5rem;padding:4px 12px;border-radius:999px;font-size:.75rem;font-weight:500;background:rgba(255,255,255,.05);color:var(--t2);border:1px solid rgba(255,255,255,.1)}
+
+/* DASHBOARD SECTION */
+#dashboard-sec{background:var(--bg);padding:6rem 2rem;align-items:flex-start}
+.dash-layout{display:grid;grid-template-columns:250px 1fr;gap:2rem;width:100%;max-width:1200px;margin:0 auto;margin-top:2.5rem;text-align:left}
+.dash-sidebar{display:flex;flex-direction:column;gap:.5rem}
+.dash-nav-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:14px;font-size:.95rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .2s;border:none;background:transparent}
+.dash-nav-item:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.dash-nav-item.active{color:var(--text);background:rgba(255,255,255,.1)}
+.dash-nav-icon{font-size:1.1rem;width:24px;text-align:center;filter:grayscale(100%)}
+.dash-main{min-height:520px}
+.dash-panel{display:none;animation:fadeZoom .4s cubic-bezier(0.16,1,0.3,1)}
+.dash-panel.active{display:block}
+@keyframes fadeZoom{from{opacity:0;transform:scale(0.97)}to{opacity:1;transform:scale(1)}}
+
+/* CARDS */
+.card{background:var(--s2);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:1.75rem;margin-bottom:1.5rem;box-shadow:0 10px 30px rgba(0,0,0,0.2)}
+.card-hd{font-size:1.1rem;font-weight:600;margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;letter-spacing:-0.01em}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+
+/* FORM */
+.fg{margin-bottom:1.2rem}
+label{display:block;font-size:.85rem;font-weight:500;color:var(--t2);margin-bottom:.5rem}
+input,select,textarea{width:100%;padding:.8rem 1rem;background:var(--s3);border:1px solid var(--border);border-radius:12px;color:var(--text);font-family:inherit;font-size:.95rem;outline:none;transition:all .3s}
+input:focus,select:focus,textarea:focus{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.4)}
+input::placeholder,textarea::placeholder{color:var(--t3)}
+select option{background:#111}
+textarea{resize:vertical;min-height:80px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:.8rem 1.5rem;border-radius:14px;font-family:inherit;font-size:.95rem;font-weight:500;cursor:pointer;border:none;transition:all .3s;white-space:nowrap}
+.btn-p{background:#fff;color:#000;}
+.btn-p:hover{transform:scale(1.02);opacity:.9}
+.btn-s{background:rgba(255,255,255,.1);color:var(--text);border:none}
+.btn-s:hover{background:rgba(255,255,255,.15);transform:scale(1.02)}
+.btn-d{background:rgba(255,59,48,.15);color:var(--red);border:none}
+.btn-d:hover{background:rgba(255,59,48,.25)}
+.btn-sm{padding:.6rem 1rem;font-size:.85rem;border-radius:10px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-size:.75rem;font-weight:500}
+.bg{background:rgba(52,199,89,.15);color:var(--a4);}
+.br{background:rgba(255,59,48,.15);color:var(--red);}
+.bb,.bp,.bc,.by{background:rgba(255,255,255,.1);color:var(--text);}
+
+/* RES BOX */
+.res{background:var(--s3);border:1px solid var(--border);border-radius:12px;padding:1.2rem;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--t2);white-space:pre-wrap;word-break:break-all;max-height:220px;overflow-y:auto;display:none;margin-top:1.2rem;animation:fadeZoom .3s}
+.res.show{display:block}
+.res.ok{border-color:rgba(255,255,255,.3);color:var(--text)}
+.res.err{border-color:var(--red);color:var(--red)}
+
+/* TABLE */
+.tw{overflow-x:auto;border-radius:16px;border:1px solid var(--border);background:var(--s2)}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+th{background:rgba(255,255,255,.05);color:var(--t2);padding:12px 16px;text-align:left;font-size:.8rem;font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+td{padding:14px 16px;border-top:1px solid var(--border);color:var(--text)}
+tr:hover td{background:rgba(255,255,255,.03)}
+
+/* CHAT ENHANCEMENTS */
+.chat-win{height:420px;overflow-y:auto;display:flex;flex-direction:column;gap:1.2rem;padding:1.5rem;background:transparent;border:none;margin-bottom:0}
+.cm{display:flex;gap:14px;align-items:flex-end}
+.cm.user{flex-direction:row-reverse}
+.cm-av{width:36px;height:36px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.9rem;font-weight:600}
+.cm-av.ai{background:#fff;color:#000}
+.cm-av.usr{background:rgba(255,255,255,.1);color:var(--text)}
+.cm-bub{max-width:75%;padding:.9rem 1.2rem;border-radius:20px;font-size:.95rem;line-height:1.5;letter-spacing:0}
+.cm.ai .cm-bub{background:rgba(255,255,255,.1);color:var(--text);border-bottom-left-radius:4px;}
+.cm.user .cm-bub{background:#fff;color:#000;border-bottom-right-radius:4px;}
+.chat-row{display:flex;gap:12px;background:rgba(255,255,255,.05);padding:8px;border-radius:20px;border:1px solid var(--border);margin-top:1rem}
+.chat-row input{flex:1;border:none;background:transparent;box-shadow:none;padding:.8rem 1rem;font-size:1rem}
+.chat-row input:focus{background:transparent;border:none}
+.typing span{width:6px;height:6px;border-radius:50%;background:var(--t2);display:inline-block;margin:0 2px;animation:tb 1s infinite ease-in-out}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes tb{0%,100%{transform:scale(0.8);opacity:0.4}50%{transform:scale(1.2);opacity:1}}
+
+/* SPINNER */
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(255,255,255,.2);border-radius:50%;border-top-color:#fff;animation:sp .6s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* TOAST */
+#toasts{position:fixed;top:80px;right:2rem;z-index:9999;display:flex;flex-direction:column;gap:12px;pointer-events:none}
+.toast{background:rgba(28,28,30,0.85);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:16px;padding:14px 20px;font-size:.9rem;font-weight:500;max-width:320px;box-shadow:0 15px 40px rgba(0,0,0,.5);animation:slideIn .4s cubic-bezier(0.16,1,0.3,1);pointer-events:auto}
+.toast.ok{border-left:4px solid var(--a4)} .toast.err{border-left:4px solid var(--red)}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px) scale(0.95)}to{opacity:1;transform:none}}
+
+/* HOW IT WORKS */
+#howitworks{background:var(--bg);padding:6rem 2rem;align-items:flex-start}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2.5rem;margin-top:3.5rem;text-align:left}
+.step{display:flex;flex-direction:column;align-items:flex-start;gap:1rem}
+.step-num{width:54px;height:54px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:600;color:#000;box-shadow:0 10px 30px rgba(255,255,255,0.1)}
+.step-title{font-size:1.25rem;font-weight:600;letter-spacing:-0.01em}
+.step-desc{font-size:1rem;color:var(--t2);line-height:1.6}
+
+/* TECH STACK */
+#techstack{background:var(--bg);padding:6rem 2rem;align-items:flex-start}
+.tech-grid{display:flex;flex-wrap:wrap;gap:1.5rem;margin-top:3.5rem;justify-content:center}
+.tech-chip{display:flex;align-items:center;gap:14px;background:var(--s2);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:20px;padding:1.2rem 1.8rem;min-width:200px;transition:all .4s cubic-bezier(0.16,1,0.3,1)}
+.tech-chip:hover{border-color:rgba(255,255,255,0.3);transform:scale(1.05);background:rgba(255,255,255,0.1)}
+.tc-icon{font-size:1.8rem;filter:grayscale(100%)}
+.tc-name{font-size:1rem;font-weight:600}
+.tc-desc{font-size:.85rem;color:var(--t2);margin-top:4px}
+
+/* SCROLL ANIMATIONS (3D + BLUR) */
+.reveal{opacity:0;transform:scale(0.92) translateY(30px) rotateX(10deg);filter:blur(8px);transition:all 1s cubic-bezier(0.2,0.8,0.2,1);transform-origin:center top}
+.reveal.visible{opacity:1;transform:scale(1) translateY(0) rotateX(0);filter:blur(0)}
+.reveal-l{opacity:0;transform:scale(0.92) translateX(-40px);filter:blur(8px);transition:all 1s cubic-bezier(0.2,0.8,0.2,1)}
+.reveal-l.visible{opacity:1;transform:scale(1) translateX(0);filter:blur(0)}
+.reveal-r{opacity:0;transform:scale(0.92) translateX(40px);filter:blur(8px);transition:all 1s cubic-bezier(0.2,0.8,0.2,1)}
+.reveal-r.visible{opacity:1;transform:scale(1) translateX(0);filter:blur(0)}
+
+/* TYPEWRITER */
+.typewriter{display:inline-block;white-space:pre-wrap}
+.typewriter-cursor{display:inline-block;width:3px;background:var(--text);margin-left:2px;animation:blink 1s step-end infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* GLOW ORBS */
+.orb{position:absolute;border-radius:50%;pointer-events:none;filter:blur(100px);opacity:.15}
+.orb-blue{background:radial-gradient(circle,#ffffff,transparent);width:600px;height:600px}
+.orb-purple{background:radial-gradient(circle,#a1a1a6,transparent);width:500px;height:500px}
+
+/* MONO */
+.mono{font-family:'JetBrains Mono',monospace;font-size:.74rem;color:var(--a3)}
+
+/* TABS */
+.tabs{display:flex;gap:8px;margin-bottom:1.5rem;flex-wrap:wrap;background:var(--s3);padding:6px;border-radius:14px;width:fit-content}
+.tab{padding:8px 18px;border-radius:10px;font-size:.9rem;font-weight:500;color:var(--t2);cursor:pointer;transition:all .3s;border:none}
+.tab:hover{color:var(--text)}
+.tab.active{background:rgba(255,255,255,.1);color:var(--text);box-shadow:0 4px 10px rgba(0,0,0,0.1)}
+
+/* ASSETS TABLE */
+.asset-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:14px;background:var(--s3);margin-bottom:8px;transition:all .3s;border:1px solid transparent}
+.asset-row:hover{background:var(--s2);border-color:var(--border);transform:scale(1.01)}
+.asset-icon{width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,0.05);display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;filter:grayscale(100%)}
+.asset-info{flex:1}
+.asset-name{font-size:.95rem;font-weight:600;margin-bottom:2px}
+.asset-meta{font-size:.8rem;color:var(--t2)}
+.asset-val{text-align:right}
+.asset-amount{font-size:1.1rem;font-weight:600}
+.asset-change{font-size:.75rem;color:var(--a4);margin-top:2px}
+
+/* EMPTY */
+.empty{text-align:center;padding:2.5rem;color:var(--t3)}
+.empty-i{font-size:2.2rem;margin-bottom:.5rem}
+</style>
+</head>
+<body>
+<div id="toasts"></div>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a class="logo" href="#hero">
+    <div class="logo-icon">V</div>
+    VeriChain
+  </a>
+  <div class="nav-links">
+    <div class="nav-pill"><div class="nav-pill-dot"></div>Live System</div>
+    <a class="nav-link" href="#features">Features</a>
+    <a class="nav-link" href="#dashboard-sec">Platform</a>
+    <a class="nav-link" href="#howitworks">How it works</a>
+    <a class="nav-link" href="#techstack">Tech Stack</a>
+    <button class="nav-link nav-cta" onclick="scrollToDash()">Launch App</button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <canvas id="particles"></canvas>
+  <div class="orb orb-blue" style="top:-10%;left:-8%"></div>
+  <div class="orb orb-purple" style="bottom:-5%;right:-5%"></div>
+
+  <div class="hero-content">
+    <h1 class="hero-title">
+      <div class="line1" id="tw-title1"></div>
+      <div class="line2" id="tw-title2"></div>
+    </h1>
+    <div class="hero-btns" id="hero-btns" style="opacity:0; transition:opacity 1s ease; margin-top:2rem">
+      <button class="btn-hero btn-hero-primary" onclick="scrollToDash()">Launch Platform</button>
+      <button class="btn-hero btn-hero-ghost" onclick="document.location='http://127.0.0.1:8000/docs'">API Docs ↗</button>
+    </div>
+    <div class="hero-badges" id="hero-badges" style="opacity:0; transition:opacity 1s ease">
+      <span class="badge bb">FastAPI</span>
+      <span class="badge bp">web3.py</span>
+      <span class="badge bc">Pinata IPFS</span>
+      <span class="badge bg">Ethereum Network</span>
+      <span class="badge by">AI-Powered</span>
+    </div>
+  </div>
+
+  <div class="scroll-ind">
+    <div class="scroll-arrow"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ═══ FEATURES ═══ -->
+<section id="features">
+  <div class="section-inner">
+    <div class="section-label reveal">Why VeriChain?</div>
+    <h2 class="section-title reveal">Everything you need for<br/>decentralized trust.</h2>
+    <p class="section-sub reveal">Built for governments, universities, and enterprises that need unforgeable, instantly verifiable records.</p>
+    <div class="features-grid">
+      <div class="feature-card reveal" style="--fc-glow:rgba(255,255,255,.15)">
+        <div class="fc-icon">01</div>
+        <div class="fc-title">Decentralized Identity (DID)</div>
+        <div class="fc-desc">Every user gets a cryptographically unique identity tied to their wallet — no username, no password, no breach.</div>
+        <span class="fc-tag">W3C DID Standard</span>
+      </div>
+      <div class="feature-card reveal" style="--fc-glow:rgba(255,255,255,.15);animation-delay:.1s">
+        <div class="fc-icon">02</div>
+        <div class="fc-title">NFT-Based Asset Ownership</div>
+        <div class="fc-desc">Gold, certificates, stocks, crypto — all minted as tamper-proof on-chain tokens. Ownership is permanent and instant to verify.</div>
+        <span class="fc-tag">ERC-721 Compatible</span>
+      </div>
+      <div class="feature-card reveal" style="--fc-glow:rgba(255,255,255,.15);animation-delay:.2s">
+        <div class="fc-icon">03</div>
+        <div class="fc-title">Admin-Only Minting</div>
+        <div class="fc-desc">Role-based access control enforced by the smart contract. Only approved admins can issue assets — no fakes possible.</div>
+        <span class="fc-tag">On-chain RBAC</span>
+      </div>
+      <div class="feature-card reveal" style="--fc-glow:rgba(255,255,255,.15);animation-delay:.3s">
+        <div class="fc-icon">04</div>
+        <div class="fc-title">IPFS Metadata Storage</div>
+        <div class="fc-desc">Asset metadata pinned to IPFS via Pinata — decentralized, permanent, and content-addressed.</div>
+        <span class="fc-tag">Pinata Cloud</span>
+      </div>
+      <div class="feature-card reveal" style="--fc-glow:rgba(255,255,255,.15);animation-delay:.4s">
+        <div class="fc-icon">05</div>
+        <div class="fc-title">Immutable Audit Trail</div>
+        <div class="fc-desc">Every action — identity creation, minting, transfer, revocation — is permanently recorded on-chain. Zero tampering possible.</div>
+        <span class="fc-tag">Blockchain Events</span>
+      </div>
+      <div class="feature-card reveal" style="--fc-glow:rgba(255,255,255,.15);animation-delay:.5s">
+        <div class="fc-icon">06</div>
+        <div class="fc-title">AI-Powered Agent</div>
+        <div class="fc-desc">Local Ollama AI that can query blockchain data, explain platform features, and assist users conversationally.</div>
+        <span class="fc-tag">Qwen3 · Ollama</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DASHBOARD ═══ -->
+<section id="dashboard-sec">
+  <div class="section-inner" id="dash-anchor" style="padding-top:2rem">
+    <div class="section-label reveal">Live Platform</div>
+    <h2 class="section-title reveal">Blockchain Dashboard</h2>
+    <p class="section-sub reveal">Interact with the deployed smart contract on your local node.</p>
+
+    <div class="dash-layout reveal">
+      <!-- SIDEBAR -->
+      <div class="dash-sidebar">
+        <div class="dash-nav-item active" onclick="showPanel('overview',this)">
+          <span class="dash-nav-icon">📊</span> Overview
+        </div>
+        <div class="dash-nav-item" onclick="showPanel('identity',this)">
+          <span class="dash-nav-icon">ID</span> Identity
+        </div>
+        <div class="dash-nav-item" onclick="showPanel('assets',this)">
+          <span class="dash-nav-icon">+</span> Mint Asset
+        </div>
+        <div class="dash-nav-item" onclick="showPanel('myassets',this)">
+          <span class="dash-nav-icon">PF</span> My Portfolio
+        </div>
+        <div class="dash-nav-item" onclick="showPanel('roles',this)">
+          <span class="dash-nav-icon">@</span> Roles
+        </div>
+        <div class="dash-nav-item" onclick="showPanel('recovery',this)">
+          <span class="dash-nav-icon">R</span> Recovery
+        </div>
+        <div class="dash-nav-item" onclick="showPanel('audit',this)">
+          <span class="dash-nav-icon">L</span> Audit Trail
+        </div>
+        <div class="dash-nav-item" onclick="showPanel('ai',this)">
+          <span class="dash-nav-icon">AI</span> AI Agent
+        </div>
+        <div style="margin-top:auto;padding-top:1rem">
+          <div style="font-size:.72rem;color:var(--t3);padding:0 4px;margin-bottom:.5rem">System Status</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;justify-content:space-between;font-size:.75rem;padding:6px 10px;background:var(--s3);border-radius:8px">
+              <span style="color:var(--t2)">Backend API</span>
+              <span id="status-api" class="badge bg">—</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:.75rem;padding:6px 10px;background:var(--s3);border-radius:8px">
+              <span style="color:var(--t2)">AI Agent</span>
+              <span id="status-ai" class="badge by">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN PANELS -->
+      <div class="dash-main">
+
+        <!-- OVERVIEW -->
+        <div class="dash-panel active" id="panel-overview">
+          <div class="card">
+            <div class="card-hd">📡 Connection Status</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;font-size:.8rem">
+              <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--s3);border-radius:8px"><span style="color:var(--t2)">GET /health</span><span id="api-health-status" class="badge bb">Checking...</span></div>
+              <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--s3);border-radius:8px"><span style="color:var(--t2)">Blockchain Connection</span><span id="api-chain-status" class="badge bb">Checking...</span></div>
+              <div style="display:flex;justify-content:space-between;padding:7px 10px;background:var(--s3);border-radius:8px"><span style="color:var(--t2)">AI Service (Ollama)</span><span id="api-ai-status" class="badge bb">Checking...</span></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hd">About</div>
+            <p style="font-size:0.85rem; color:var(--t2); line-height:1.6">
+              Welcome to the genuine VeriChain platform. All features on this dashboard directly interact with the deployed smart contract via the FastAPI backend and web3.py. 
+              <br><br>
+              <strong>No fake demo data is displayed.</strong> What you see here reflects the actual state on the blockchain network.
+            </p>
+          </div>
+        </div>
+
+        <!-- IDENTITY -->
+        <div class="dash-panel" id="panel-identity">
+          <div class="g2">
+            <div class="card">
+              <div class="card-hd">➕ Create Identity</div>
+              <div class="fg"><label>Wallet Address (0x…)</label><input id="id-wallet" placeholder="0xAbCd1234…" /></div>
+              <div class="fg"><label>Full Name</label><input id="id-name" placeholder="Arnav Warale" /></div>
+              <div class="fg"><label>Email</label><input id="id-email" placeholder="user@example.com" /></div>
+              <button class="btn btn-p" onclick="createIdentity()" id="btn-id">🪪 Create Identity</button>
+              <div class="res" id="res-id"></div>
+            </div>
+            <div class="card">
+              <div class="card-hd">🔍 Lookup Identity</div>
+              <div class="fg"><label>Wallet Address</label><input id="lookup-wallet" placeholder="0xAbCd1234…" /></div>
+              <button class="btn btn-s" onclick="lookupIdentity()" id="btn-lookup">🔍 Fetch Profile</button>
+              <div class="res" id="res-lookup"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MINT ASSET -->
+        <div class="dash-panel" id="panel-assets">
+          <div class="card">
+            <div class="card-hd">🔨 Mint New Asset</div>
+            <div class="g2">
+              <div class="fg"><label>Recipient Wallet</label><input id="mint-wallet" placeholder="0xAbCd…" /></div>
+              <div class="fg"><label>Asset Name</label><input id="mint-name" placeholder="Gold Certificate #1" /></div>
+              <div class="fg"><label>Asset Type</label>
+                <select id="mint-type"><option value="gold">🥇 Gold</option><option value="certificate">📜 Certificate</option><option value="stock">📈 Stock</option><option value="crypto">₿ Crypto</option><option value="nft">🖼️ NFT</option><option value="document">📄 Document</option></select>
+              </div>
+              <div class="fg"><label>Quantity</label><input id="mint-qty" type="number" value="1" min="1" /></div>
+              <div class="fg"><label>Unit</label><input id="mint-unit" placeholder="grams, shares, tokens…" /></div>
+              <div class="fg"><label>Metadata URI (optional)</label><input id="mint-uri" placeholder="ipfs://… or leave blank" /></div>
+            </div>
+            <button class="btn btn-p" onclick="mintAsset()" id="btn-mint">🏅 Mint Asset</button>
+            <div class="res" id="res-mint"></div>
+          </div>
+          <div class="card">
+            <div class="card-hd">🗑️ Revoke Asset</div>
+            <div class="fg"><label>Asset ID</label><input id="revoke-id" type="number" placeholder="e.g. 42" min="1" style="max-width:200px" /></div>
+            <button class="btn btn-d btn-sm" onclick="revokeAsset()" id="btn-revoke">🗑️ Revoke</button>
+            <div class="res" id="res-revoke"></div>
+          </div>
+        </div>
+
+        <!-- MY ASSETS -->
+        <div class="dash-panel" id="panel-myassets">
+          <div class="card">
+            <div class="card-hd">💼 Asset Portfolio</div>
+            <div style="display:flex;gap:8px;margin-bottom:1rem">
+              <input id="assets-wallet" placeholder="Enter wallet address 0x…" style="flex:1" />
+              <button class="btn btn-p btn-sm" onclick="fetchAssets()" id="btn-fetchassets">🔍 Fetch</button>
+            </div>
+            <div id="assets-result">
+              <div class="empty"><div class="empty-i">💼</div><p>No assets searched yet</p></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ROLES -->
+        <div class="dash-panel" id="panel-roles">
+          <div class="g2">
+            <div class="card">
+              <div class="card-hd">🔑 Assign Admin Role</div>
+              <div class="fg"><label>Wallet Address</label><input id="role-wallet" placeholder="0xAbCd…" /></div>
+              <button class="btn btn-p" onclick="assignRole()" id="btn-assign-role">🔑 Assign Admin</button>
+              <div class="res" id="res-role"></div>
+            </div>
+            <div class="card">
+              <div class="card-hd">🔍 Check Role</div>
+              <div class="fg"><label>Wallet Address</label><input id="role-check-wallet" placeholder="0xAbCd…" /></div>
+              <button class="btn btn-s" onclick="checkRole()" id="btn-check-role">🔍 Check</button>
+              <div class="res" id="res-role-check"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RECOVERY -->
+        <div class="dash-panel" id="panel-recovery">
+          <div class="tabs">
+            <div class="tab active" onclick="switchTab('rec','guardians',this)">Guardians</div>
+            <div class="tab" onclick="switchTab('rec','request',this)">Request Recovery</div>
+            <div class="tab" onclick="switchTab('rec','approve',this)">Approve</div>
+          </div>
+          <div id="rec-tab-guardians">
+            <div class="g2">
+              <div class="card">
+                <div class="card-hd">➕ Add Guardian</div>
+                <div class="fg"><label>Guardian Wallet</label><input id="g-add" placeholder="0xAbCd…" /></div>
+                <button class="btn btn-p" onclick="addGuardian()" id="btn-add-g">➕ Add</button>
+                <div class="res" id="res-g-add"></div>
+              </div>
+              <div class="card">
+                <div class="card-hd">🛡️ View Guardians</div>
+                <div class="fg"><label>Identity Wallet</label><input id="g-view" placeholder="0xAbCd…" /></div>
+                <button class="btn btn-s" onclick="viewGuardians()" id="btn-view-g">🛡️ View</button>
+                <div class="res" id="res-g-view"></div>
+              </div>
+            </div>
+          </div>
+          <div id="rec-tab-request" style="display:none">
+            <div class="card">
+              <div class="card-hd">📤 Request Recovery</div>
+              <div class="fg"><label>Original Wallet</label><input id="rec-id" placeholder="0xAbCd…" /></div>
+              <div class="fg"><label>New Owner Address</label><input id="rec-new" placeholder="0xAbCd…" /></div>
+              <button class="btn btn-p" onclick="reqRecovery()" id="btn-req-rec">📤 Request</button>
+              <div class="res" id="res-rec"></div>
+            </div>
+          </div>
+          <div id="rec-tab-approve" style="display:none">
+            <div class="g2">
+              <div class="card">
+                <div class="card-hd">✅ Approve Recovery</div>
+                <div class="fg"><label>Recovery ID</label><input id="rec-approve-id" type="number" placeholder="1" /></div>
+                <button class="btn btn-p btn-sm" onclick="approveRec()" id="btn-approve">✅ Approve</button>
+                <div class="res" id="res-approve"></div>
+              </div>
+              <div class="card">
+                <div class="card-hd">📊 Check Status</div>
+                <div class="fg"><label>Recovery ID</label><input id="rec-status-id" type="number" placeholder="1" /></div>
+                <button class="btn btn-s btn-sm" onclick="checkRec()" id="btn-rec-status">📊 Status</button>
+                <div class="res" id="res-rec-status"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- AUDIT -->
+        <div class="dash-panel" id="panel-audit">
+          <div class="card">
+            <div class="card-hd">📝 Log Audit Event</div>
+            <div class="fg"><label>Action</label>
+              <select id="audit-action"><option>USER_LOGIN</option><option>DOCUMENT_VERIFIED</option><option>ASSET_TRANSFERRED</option><option>ROLE_CHANGED</option><option>RECOVERY_INITIATED</option></select>
+            </div>
+            <div class="fg"><label>Details</label><textarea id="audit-details" placeholder="Describe the action…"></textarea></div>
+            <button class="btn btn-p" onclick="logAudit()" id="btn-audit">📝 Log On-Chain</button>
+            <div class="res" id="res-audit"></div>
+          </div>
+          <div class="card">
+            <div class="card-hd">🔎 Recent Audit Logs</div>
+            <button class="btn btn-s btn-sm" onclick="fetchAuditLogs()" id="btn-fetch-logs" style="margin-bottom: 1rem;">🔎 Fetch Blockchain Logs</button>
+            <div class="tw">
+              <table>
+                <thead><tr><th>Action</th><th>Details</th><th>Actor</th><th>Time</th></tr></thead>
+                <tbody id="audit-tbody">
+                  <tr><td colspan="4" style="text-align:center;">Click fetch to load logs from blockchain</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- AI CHAT -->
+        <div class="dash-panel" id="panel-ai">
+          <div class="card" style="height:100%">
+            <div class="card-hd">🤖 Verichain AI Agent</div>
+            <div class="chat-win" id="chatWin">
+              <div class="cm ai">
+                <div class="cm-av ai">V</div>
+                <div class="cm-bub">👋 Hi! I'm Verichain AI — your blockchain assistant. I can explain how the platform works, help you understand identities, assets, guardians, and more. What would you like to know?</div>
+              </div>
+            </div>
+            <div class="chat-row">
+              <input id="chatInput" placeholder="Ask anything about VeriChain…" onkeydown="if(event.key==='Enter')sendChat()" />
+              <button class="btn btn-p" onclick="sendChat()" id="btn-chat">Send ↑</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end dash-main -->
+    </div><!-- end dash-layout -->
+  </div>
+</section>
+
+<!-- ═══ HOW IT WORKS ═══ -->
+<section id="howitworks">
+  <div class="section-inner">
+    <div class="section-label reveal">The Flow</div>
+    <h2 class="section-title reveal">How VeriChain works</h2>
+    <p class="section-sub reveal">From wallet to on-chain asset in 4 simple steps.</p>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <div class="step-title">Connect Wallet</div>
+        <div class="step-desc">User connects their Ethereum wallet. A cryptographic DID is created — no usernames, no passwords.</div>
+      </div>
+      <div class="step reveal" style="transition-delay:.1s">
+        <div class="step-num">2</div>
+        <div class="step-title">Create Identity</div>
+        <div class="step-desc">Profile metadata is pinned to IPFS. The IPFS URI is registered on the smart contract — permanently and immutably.</div>
+      </div>
+      <div class="step reveal" style="transition-delay:.2s">
+        <div class="step-num">3</div>
+        <div class="step-title">Mint Assets</div>
+        <div class="step-desc">Admins mint NFT-based assets (gold, certificates, stocks) to user wallets. Every mint creates an on-chain event.</div>
+      </div>
+      <div class="step reveal" style="transition-delay:.3s">
+        <div class="step-num">4</div>
+        <div class="step-title">Verify Instantly</div>
+        <div class="step-desc">Anyone can verify ownership by querying the smart contract — no middleman, no delay, no doubt.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TECH STACK ═══ -->
+<section id="techstack">
+  <div class="section-inner">
+    <div class="section-label reveal">Built With</div>
+    <h2 class="section-title reveal">Enterprise-grade tech stack</h2>
+    <p class="section-sub reveal">Every layer chosen for reliability, speed, and decentralization.</p>
+    <div class="tech-grid">
+      <div class="tech-chip reveal"><div class="tc-icon">01</div><div><div class="tc-name">FastAPI</div><div class="tc-desc">Python backend · REST API</div></div></div>
+      <div class="tech-chip reveal" style="transition-delay:.05s"><div class="tc-icon">02</div><div><div class="tc-name">web3.py</div><div class="tc-desc">Ethereum/EVM interaction</div></div></div>
+      <div class="tech-chip reveal" style="transition-delay:.1s"><div class="tc-icon">03</div><div><div class="tc-name">Solidity</div><div class="tc-desc">Smart contracts · Hardhat</div></div></div>
+      <div class="tech-chip reveal" style="transition-delay:.15s"><div class="tc-icon">04</div><div><div class="tc-name">Pinata IPFS</div><div class="tc-desc">Decentralized storage</div></div></div>
+      <div class="tech-chip reveal" style="transition-delay:.2s"><div class="tc-icon">05</div><div><div class="tc-name">Polygon Network</div><div class="tc-desc">EVM-compatible L2</div></div></div>
+      <div class="tech-chip reveal" style="transition-delay:.25s"><div class="tc-icon">06</div><div><div class="tc-name">Ollama · Qwen3</div><div class="tc-desc">Local AI inference</div></div></div>
+    </div>
+  </div>
+</section>
+
+<script>
+// ─── CONFIG ───
+const API = 'http://127.0.0.1:8000';
+let chatHistory = [];
+
+// ─── TYPEWRITER ───
+const typeText = async (id, text, speed) => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = '<span class="typewriter"></span><span class="typewriter-cursor"></span>';
+  const tw = el.querySelector('.typewriter');
+  for (let i = 0; i < text.length; i++) {
+    tw.textContent += text[i];
+    await new Promise(r => setTimeout(r, speed + Math.random()*speed));
+  }
+  el.querySelector('.typewriter-cursor').style.display = 'none';
+};
+(async function initHero() {
+  await typeText('tw-title1', 'Own Your Identity.', 40);
+  await typeText('tw-title2', 'Own Your Assets.', 40);
+  
+  const btns = document.getElementById('hero-btns');
+  if(btns) btns.style.opacity = '1';
+  const badges = document.getElementById('hero-badges');
+  if(badges) badges.style.opacity = '1';
+})();
+
+// ─── PARTICLES ───
+(function(){
+  const c = document.getElementById('particles');
+  const ctx = c.getContext('2d');
+  let pts = [];
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight}
+  resize(); window.addEventListener('resize',resize);
+  function mkPt(){return{x:Math.random()*c.width,y:Math.random()*c.height,r:Math.random()*1.5+.3,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,a:Math.random()*.6+.1}}
+  for(let i=0;i<110;i++)pts.push(mkPt());
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    pts.forEach(p=>{
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(255,255,255,${p.a * 0.5})`;ctx.fill();
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0||p.x>c.width)p.vx*=-1;
+      if(p.y<0||p.y>c.height)p.vy*=-1;
+    });
+    for(let i=0;i<pts.length;i++){
+      for(let j=i+1;j<pts.length;j++){
+        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120){
+          ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);
+          ctx.strokeStyle=`rgba(255,255,255,${.1*(1-d/120)})`;ctx.lineWidth=.7;ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ─── SCROLL REVEAL ───
+const ro = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+    }else{
+      e.target.classList.remove('visible'); // zoom out when leaving screen
+    }
+  });
+},{threshold:.12});
+document.querySelectorAll('.reveal,.reveal-l,.reveal-r').forEach(el=>ro.observe(el));
+
+// ─── NAV ───
+function scrollToDash(){document.getElementById('dash-anchor').scrollIntoView({behavior:'smooth'})}
+
+// ─── DASH NAV ───
+function showPanel(name,el){
+  document.querySelectorAll('.dash-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.dash-nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+}
+
+// ─── TABS ───
+function switchTab(group,tabName,el){
+  document.querySelectorAll(`[id^="${group}-tab-"]`).forEach(t=>t.style.display='none');
+  document.getElementById(`${group}-tab-${tabName}`).style.display='block';
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ─── TOAST ───
+function toast(msg,type='info'){
+  const t=document.createElement('div');
+  t.className=`toast ${type}`;
+  t.textContent=(type==='ok'?'✅ ':type==='err'?'❌ ':'ℹ️ ')+msg;
+  document.getElementById('toasts').appendChild(t);
+  setTimeout(()=>t.remove(),4000);
+}
+
+// ─── RES ───
+function showRes(id,data,isErr=false){
+  const el=document.getElementById(id);
+  el.className=`res show ${isErr?'err':'ok'}`;
+  el.textContent=typeof data==='string'?data:JSON.stringify(data,null,2);
+}
+
+// ─── LOAD ───
+function setLoad(id,on){
+  const b=document.getElementById(id);if(!b)return;
+  b.disabled=on;
+  if(on){b._t=b.innerHTML;b.innerHTML='<span class="spin"></span> Loading…';}
+  else{b.innerHTML=b._t||b.innerHTML;}
+}
+
+// ─── API CALL ───
+async function api(path,method='GET',body=null){
+  const opts={method,headers:{'Content-Type':'application/json'}};
+  if(body)opts.body=JSON.stringify(body);
+  const r=await fetch(API+path,opts);
+  const d=await r.json();
+  if(!r.ok)throw new Error(d.detail||JSON.stringify(d));
+  return d;
+}
+
+// ─── IDENTITY ───
+async function createIdentity(){
+  setLoad('btn-id',true);
+  try{
+    const wallet=document.getElementById('id-wallet').value.trim();
+    const name=document.getElementById('id-name').value.trim();
+    const email=document.getElementById('id-email').value.trim();
+    if(!wallet||!name){toast('Wallet and Name required','err');return;}
+    const d=await api('/identity/create','POST',{wallet_address:wallet,name,email:email||undefined});
+    showRes('res-id',d);
+    toast(`Identity created for ${name}!`,'ok');
+  }catch(e){
+    showRes('res-id',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-id',false);}
+}
+
+async function lookupIdentity(){
+  setLoad('btn-lookup',true);
+  try{
+    const w=document.getElementById('lookup-wallet').value.trim();
+    if(!w){toast('Enter a wallet address','err');return;}
+    const d=await api('/identity/status?wallet='+encodeURIComponent(w));
+    showRes('res-lookup',d);
+  }catch(e){
+    showRes('res-lookup',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-lookup',false);}
+}
+
+// ─── ASSETS ───
+async function mintAsset(){
+  setLoad('btn-mint',true);
+  try{
+    const wallet=document.getElementById('mint-wallet').value.trim();
+    const asset_name=document.getElementById('mint-name').value.trim();
+    const asset_type=document.getElementById('mint-type').value;
+    const quantity=parseInt(document.getElementById('mint-qty').value)||1;
+    const unit=document.getElementById('mint-unit').value.trim();
+    const metadata_uri=document.getElementById('mint-uri').value.trim();
+    if(!wallet||!asset_name){toast('Wallet and Asset Name required','err');return;}
+    const body={wallet_address:wallet,asset_name,asset_type,quantity};
+    if(unit)body.unit=unit;if(metadata_uri)body.metadata_uri=metadata_uri;
+    const d=await api('/assets/mint','POST',body);
+    showRes('res-mint',d);
+    toast(`Asset "${asset_name}" minted! ID: ${d.asset_id}`,'ok');
+  }catch(e){
+    showRes('res-mint',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-mint',false);}
+}
+
+async function revokeAsset(){
+  setLoad('btn-revoke',true);
+  try{
+    const id=parseInt(document.getElementById('revoke-id').value);
+    if(!id){toast('Enter asset ID','err');return;}
+    const d=await api('/assets/revoke','POST',{asset_id:id});
+    showRes('res-revoke',d);
+    toast(`Asset #${id} revoked`,'ok');
+  }catch(e){
+    showRes('res-revoke',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-revoke',false);}
+}
+
+async function fetchAssets(){
+  setLoad('btn-fetchassets',true);
+  try{
+    const w=document.getElementById('assets-wallet').value.trim();
+    if(!w){toast('Enter wallet address','err');return;}
+    const d=await api('/assets/get/'+encodeURIComponent(w));
+    const el=document.getElementById('assets-result');
+    if(!d.assets||d.assets.length===0){
+      el.innerHTML='<div class="empty"><div class="empty-i">💼</div><p>No assets found</p></div>';return;
+    }
+    el.innerHTML=d.assets.map(a=>`
+      <div class="asset-row">
+        <div class="asset-icon" style="background:rgba(79,142,247,.1)">${{gold:'🥇',certificate:'📜',stock:'📈',crypto:'₿',nft:'🖼️',document:'📄'}[a.asset_type]||'📦'}</div>
+        <div class="asset-info"><div class="asset-name">${a.asset_name}</div><div class="asset-meta">ID #${a.id} · ${a.asset_type}</div></div>
+        <div class="asset-val"><div class="asset-amount">${a.quantity}</div><span class="${a.is_valid?'badge bg':'badge br'}" style="padding:2px 7px">${a.is_valid?'✓ Valid':'✗ Revoked'}</span></div>
+      </div>`).join('');
+    toast(`Found ${d.count} assets`,'ok');
+  }catch(e){
+    document.getElementById('assets-result').innerHTML=`<div class="res show err">${e.message}</div>`;
+    toast(e.message,'err');
+  }finally{setLoad('btn-fetchassets',false);}
+}
+
+// ─── ROLES ───
+async function assignRole(){
+  setLoad('btn-assign-role',true);
+  try{
+    const wallet=document.getElementById('role-wallet').value.trim();
+    if(!wallet){toast('Enter wallet','err');return;}
+    const d=await api('/roles/assign','POST',{wallet_address:wallet,role:'admin'});
+    showRes('res-role',d);toast('Admin role assigned!','ok');
+  }catch(e){
+    showRes('res-role',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-assign-role',false);}
+}
+
+async function checkRole(){
+  setLoad('btn-check-role',true);
+  try{
+    const wallet=document.getElementById('role-check-wallet').value.trim();
+    if(!wallet){toast('Enter wallet','err');return;}
+    const d=await api('/roles/get/'+encodeURIComponent(wallet));
+    showRes('res-role-check',d);
+  }catch(e){
+    showRes('res-role-check',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-check-role',false);}
+}
+
+// ─── RECOVERY ───
+async function addGuardian(){
+  setLoad('btn-add-g',true);
+  try{
+    const addr=document.getElementById('g-add').value.trim();
+    if(!addr){toast('Enter guardian address','err');return;}
+    const d=await api('/recovery/guardians/add','POST',{guardian_address:addr});
+    showRes('res-g-add',d);toast('Guardian added!','ok');
+  }catch(e){
+    showRes('res-g-add',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-add-g',false);}
+}
+
+async function viewGuardians(){
+  setLoad('btn-view-g',true);
+  try{
+    const addr=document.getElementById('g-view').value.trim();
+    if(!addr){toast('Enter identity address','err');return;}
+    const d=await api('/recovery/guardians/'+encodeURIComponent(addr));
+    showRes('res-g-view',d);
+  }catch(e){
+    showRes('res-g-view',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-view-g',false);}
+}
+
+async function reqRecovery(){
+  setLoad('btn-req-rec',true);
+  try{
+    const ia=document.getElementById('rec-id').value.trim(),na=document.getElementById('rec-new').value.trim();
+    if(!ia||!na){toast('Both addresses required','err');return;}
+    const d=await api('/recovery/request','POST',{identity_address:ia,new_owner_address:na});
+    showRes('res-rec',d);toast('Recovery requested! ID: '+d.recovery_id,'ok');
+  }catch(e){
+    showRes('res-rec',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-req-rec',false);}
+}
+
+async function approveRec(){
+  setLoad('btn-approve',true);
+  try{
+    const id=parseInt(document.getElementById('rec-approve-id').value);
+    if(!id){toast('Enter recovery ID','err');return;}
+    const d=await api('/recovery/approve','POST',{recovery_id:id});
+    showRes('res-approve',d);toast('Recovery approved!','ok');
+  }catch(e){
+    showRes('res-approve',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-approve',false);}
+}
+
+async function checkRec(){
+  setLoad('btn-rec-status',true);
+  try{
+    const id=parseInt(document.getElementById('rec-status-id').value);
+    if(!id){toast('Enter recovery ID','err');return;}
+    const d=await api('/recovery/status/'+id);
+    showRes('res-rec-status',d);
+  }catch(e){
+    showRes('res-rec-status',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-rec-status',false);}
+}
+
+// ─── AUDIT ───
+async function logAudit(){
+  setLoad('btn-audit',true);
+  try{
+    const action=document.getElementById('audit-action').value;
+    const details=document.getElementById('audit-details').value.trim();
+    if(!details){toast('Enter details','err');return;}
+    const d=await api('/audit/log','POST',{action,details});
+    showRes('res-audit',d);
+    toast('Audit logged on-chain!','ok');
+    document.getElementById('audit-details').value='';
+  }catch(e){
+    showRes('res-audit',e.message,true);toast(e.message,'err');
+  }finally{setLoad('btn-audit',false);}
+}
+
+async function fetchAuditLogs(){
+  setLoad('btn-fetch-logs',true);
+  try{
+    const d=await api('/audit/logs');
+    const tb=document.getElementById('audit-tbody');
+    if(!d.logs || d.logs.length===0){
+       tb.innerHTML='<tr><td colspan="4" style="text-align:center;">No audit logs found on-chain.</td></tr>';
+       return;
+    }
+    tb.innerHTML = d.logs.map(l=>`
+      <tr>
+        <td><span class="badge bb">${l.action}</span></td>
+        <td>${l.details}</td>
+        <td class="mono">${l.actor ? l.actor.slice(0,8)+'…' : '—'}</td>
+        <td>${l.timestamp ? new Date(l.timestamp*1000).toLocaleString() : '—'}</td>
+      </tr>
+    `).join('');
+  }catch(e){
+    toast(e.message,'err');
+  }finally{setLoad('btn-fetch-logs',false);}
+}
+
+// ─── AI CHAT ───
+function appendMsg(role,content){
+  const win=document.getElementById('chatWin');
+  const d=document.createElement('div');
+  d.className='cm '+role;
+  const esc=content.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+  d.innerHTML=`<div class="cm-av ${role==='ai'?'ai':'usr'}">${role==='ai'?'V':'👤'}</div><div class="cm-bub">${esc}</div>`;
+  win.appendChild(d);win.scrollTop=win.scrollHeight;return d;
+}
+
+function showTyping(){
+  const win=document.getElementById('chatWin');
+  const d=document.createElement('div');
+  d.className='cm ai';d.id='typing';
+  d.innerHTML=`<div class="cm-av ai">V</div><div class="cm-bub"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  win.appendChild(d);win.scrollTop=win.scrollHeight;
+}
+
+async function sendChat(){
+  const input=document.getElementById('chatInput');
+  const msg=input.value.trim();if(!msg)return;
+  input.value='';
+  document.getElementById('btn-chat').disabled=true;
+  appendMsg('user',msg);
+  chatHistory.push({role:'user',content:msg});
+  showTyping();
+
+  try{
+    const d=await api('/ai/chat','POST',{messages:chatHistory});
+    document.getElementById('typing')?.remove();
+    const reply=d.response||'(no response)';
+    appendMsg('ai',reply);
+    chatHistory.push({role:'assistant',content:reply});
+  }catch(e){
+    document.getElementById('typing')?.remove();
+    appendMsg('ai', '⚠️ Error: ' + e.message);
+  }
+  document.getElementById('btn-chat').disabled=false;
+}
+
+// ─── STATUS CHECKS ───
+async function checkStatus(){
+  // API Health
+  try{
+    const r=await api('/health');
+    document.getElementById('status-api').textContent='Online';
+    document.getElementById('status-api').className='badge bg';
+    document.getElementById('api-health-status').textContent='Connected';
+    document.getElementById('api-health-status').className='badge bg';
+  }catch(e){
+    document.getElementById('status-api').textContent='Offline';
+    document.getElementById('status-api').className='badge br';
+    document.getElementById('api-health-status').textContent='Offline';
+    document.getElementById('api-health-status').className='badge br';
+  }
+  // Blockchain Status
+  try{
+    
+    await api('/identity/status?wallet=0x0000000000000000000000000000000000000001');
+    document.getElementById('api-chain-status').textContent='Connected';
+    document.getElementById('api-chain-status').className='badge bg';
+  }catch(e){
+    document.getElementById('api-chain-status').textContent='Error: '+e.message;
+    document.getElementById('api-chain-status').className='badge br';
+  }
+  // AI Status
+  try{
+    await fetch(API+'/ai/status',{signal:AbortSignal.timeout(2000)});
+    document.getElementById('status-ai').textContent='Online';
+    document.getElementById('status-ai').className='badge bg';
+    document.getElementById('api-ai-status').textContent='Ready';
+    document.getElementById('api-ai-status').className='badge bg';
+  }catch(e){
+    document.getElementById('status-ai').textContent='Offline';
+    document.getElementById('status-ai').className='badge br';
+    document.getElementById('api-ai-status').textContent='Offline';
+    document.getElementById('api-ai-status').className='badge br';
+  }
+}
+checkStatus();
+setInterval(checkStatus,30000);
+</script>
+</body>
+</html>
